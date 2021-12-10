@@ -1,78 +1,43 @@
-export default function Article() {
+import React from "react";
+import { NavMenu } from "components/NavMenu";
+import { useParams } from "react-router-dom";
+import ArticleBanner from "components/ArticleBanner";
+import { IArticleResponse } from "BackendTypes";
+import { useAxiosGet } from "BackendHelper";
+
+const ArticleScreen: React.FC = () => {
+  const { slug } = useParams<{ slug?: string }>();
+  const { data: articleData, loading: articleDataLoading } = useAxiosGet<IArticleResponse>(
+    `http://localhost:3000/api/articles/${slug}`
+  );
+
+  let renderedComponent = <div>Loading...</div>;
+  if (!articleDataLoading && articleData?.article) {
+    renderedComponent = (
+      <ArticleBanner
+        createdAt={articleData.article.createdAt}
+        favorited={articleData.article.favorited}
+        favoritesCount={articleData.article.favoritesCount}
+        slug={articleData.article.slug}
+        title={articleData.article.title}
+        author={articleData.article.author}
+      />
+    );
+  }
+
   return (
     <>
-      <nav className="navbar navbar-light">
-        <div className="container">
-          <a className="navbar-brand" href="/#">
-            conduit
-          </a>
-          <ul className="nav navbar-nav pull-xs-right">
-            <li className="nav-item">
-              {/* Add "active" class when you're on that page" */}
-              <a className="nav-link active" href="/#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/editor">
-                <i className="ion-compose" />
-                &nbsp;New Article
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/settings">
-                <i className="ion-gear-a" />
-                &nbsp;Settings
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/login">
-                Sign in
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/register">
-                Sign up
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <NavMenu />
 
       <div className="article-page">
-        <div className="banner">
-          <div className="container">
-            <h1>How to build webapps that scale</h1>
-
-            <div className="article-meta">
-              <a href="/#/profile/ericsimmons">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
-              <div className="info">
-                <a href="/#/profile/ericsimmons" className="author">
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
-              </div>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round" />
-                &nbsp; Follow Eric Simons <span className="counter">(10)</span>
-              </button>
-              &nbsp;&nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart" />
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        {renderedComponent}
 
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <p>Web development technologies have evolved at an incredible clip over the past few years.</p>
-              <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-              <p>It&lsquo;s a great solution for learning how other frameworks work.</p>
+              {articleData?.article.body.split("\n").map((paragraph, key) => (
+                <p key={key}>{paragraph}</p>
+              ))}
             </div>
           </div>
 
@@ -101,6 +66,7 @@ export default function Article() {
             </div>
           </div>
 
+          {/** COMMENT SECTION */}
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
               <form className="card comment-form">
@@ -166,4 +132,6 @@ export default function Article() {
       </footer>
     </>
   );
-}
+};
+
+export default ArticleScreen;

@@ -1,31 +1,30 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import Article from "./screens/ArticleScreen";
+import ArticleListScreen from "./screens/ArticleListScreen";
+import EditorScreen from "./screens/EditorScreen";
+import LoginRegisterScreen from "./screens/LoginRegisterScreen";
+import LogoutScreen from "./screens/LogoutScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
-import Article from "./Article";
-import ArticleList from "./ArticleList";
-import Editor from "./Editor";
-import LoginRegister from "./LoginRegister";
-import Logout from "./Logout";
-import Profile from "./Profile";
-import Settings from "./Settings";
-
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/editor" exact component={Editor} />
-        <Route path="/editor/:slug" exact component={Editor} />
-        <Route path="/login" exact component={LoginRegister} />
-        <Route path="/logout" exact component={Logout} />
-        <Route path="/profile/:username" exact component={Profile} />
-        <Route path="/profile/:username/favorites" exact component={Profile} />
-        <Route path="/register" exact component={LoginRegister} />
-        <Route path="/settings" exact component={Settings} />
+        <Route path="/editor" exact component={EditorScreen} />
+        <Route path="/editor/:slug" exact component={EditorScreen} />
+        <Route path="/login" exact component={LoginRegisterScreen} />
+        <Route path="/logout" exact component={LogoutScreen} />
+        <Route path="/profile/:username" exact component={ProfileScreen} />
+        <Route path="/profile/:username/favorites" exact component={ProfileScreen} />
+        <Route path="/register" exact component={LoginRegisterScreen} />
+        <Route path="/settings" exact component={SettingsScreen} />
         <Route path="/:slug" exact component={Article} />
-        <Route path="/" component={ArticleList} />
+        <Route path="/" component={ArticleListScreen} />
       </Switch>
     </Router>
   );
-}
+};
 
 export default App;
